@@ -1,0 +1,20 @@
+name: single_value_cubit
+description: Simple single value cubit. Works as a simple state manager for inputs, scrolls, flags etc. Works best as injected and observed by other blocs/cubits.
+version: 1.0.0
+homepage: https://github.com/thecodebrothers/single-value-cubit
+repository: https://github.com/thecodebrothers/single-value-cubit
+
+environment:
+  sdk: ">=2.17.3 <3.0.0"
+  flutter: ">=1.17.0"
+
+dependencies:
+  bloc: ^8.0.3
+  flutter:
+    sdk: flutter
+
+dev_dependencies:
+  flutter_lints: 2.0.0
+  flutter_test:
+    sdk: flutter
+  very_good_analysis: 3.0.0
