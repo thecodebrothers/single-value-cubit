@@ -5,11 +5,11 @@ homepage: https://github.com/thecodebrothers/single-value-cubit
 repository: https://github.com/thecodebrothers/single-value-cubit
 
 environment:
-  sdk: ">=2.17.3 <3.0.0"
-  flutter: ">=1.17.0"
+  sdk: ">=3.0.0 <4.0.0"
+  flutter: ">=3.22.0"
 
 dependencies:
-  bloc: ^8.0.3
+  bloc: ^9.0.0
   flutter:
     sdk: flutter
 
