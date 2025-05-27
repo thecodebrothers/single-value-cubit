@@ -1,3 +1,8 @@
+## 1.2.0
+* Add extensions for String and boolean cubits
+* Add TextCubitBinder to bind string cubits to text fields
+* Add `observe()` extension to observe changes in cubits with initial state
+
 ## 1.1.0
 * Update bloc version to 9
 
