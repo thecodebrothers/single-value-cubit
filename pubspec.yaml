@@ -1,6 +1,6 @@
 name: single_value_cubit
 description: Simple single value cubit. Works as a simple state manager for inputs, scrolls, flags etc. Works best as injected and observed by other blocs/cubits.
-version: 1.2.0
+version: 1.2.1
 homepage: https://github.com/thecodebrothers/single-value-cubit
 repository: https://github.com/thecodebrothers/single-value-cubit
 

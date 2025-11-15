@@ -70,6 +70,7 @@ class TextCubitBinder extends StatefulWidget {
 
 class _TextCubitBinderState extends State<TextCubitBinder> {
   final TextEditingController _controller = TextEditingController();
+  late final void Function() _listener;
 
   @override
   void initState() {
@@ -78,7 +79,8 @@ class _TextCubitBinderState extends State<TextCubitBinder> {
     final value = widget.cubit.state;
     if (value != _controller.text) _controller.text = value;
 
-    _controller.addListener(() => widget.cubit.set(_controller.text));
+    _listener = () => widget.cubit.set(_controller.text);
+    _controller.addListener(_listener);
   }
 
   @override
@@ -93,7 +95,10 @@ class _TextCubitBinderState extends State<TextCubitBinder> {
       bloc: widget.cubit,
       listener: (_, state) {
         if (state != _controller.text) {
-          _controller.text = state;
+          _controller
+            ..removeListener(_listener)
+            ..text = state
+            ..addListener(_listener);
         }
       },
       builder: (ctx, state) => widget.builder(ctx, _controller),

@@ -1,3 +1,6 @@
+## 1.2.1
+* Fix problem of infinite loop while setting textcontroller value from cubit state change
+
 ## 1.2.0
 * Add extensions for String and boolean cubits
 * Add TextCubitBinder to bind string cubits to text fields
