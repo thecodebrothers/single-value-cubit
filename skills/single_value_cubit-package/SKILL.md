@@ -1,6 +1,6 @@
 ---
 name: single_value_cubit-package
-description: "Use this skill when the user wants to use the single_value_cubit package, wire simple Flutter state with a Cubit, bind text fields to cubits, toggle boolean state with toggle(), clear string state with erase(), use StringInputCubit for text inputs, observe a Bloc/Cubit stream with the current value emitted immediately via observe(), or use SingleValueBoolCubitExtension/SingleValueStringCubitExtension. Trigger this whenever the task involves lightweight single-value state such as inputs, flags, scroll positions, filters, or replacing ad hoc ValueNotifier or basic Cubit boilerplate with single_value_cubit. MUST trigger for any question about StringInputCubit, SingleValueCubit, single value cubit."
+description: "Use this skill when the user wants to use the single_value_cubit package, wire simple Flutter state with a Cubit, bind text fields to cubits, toggle boolean state with toggle(), clear string state with erase(), increment or decrement integer state with increment()/decrement(), use StringInputCubit for text inputs, use IntValueCubit for integer counters or quantities, observe a Bloc/Cubit stream with the current value emitted immediately via observe(), or use SingleValueBoolCubitExtension/SingleValueStringCubitExtension/SingleValueIntCubitExtension. Trigger this whenever the task involves lightweight single-value state such as inputs, flags, counters, quantities, scroll positions, filters, or replacing ad hoc ValueNotifier or basic Cubit boilerplate with single_value_cubit. MUST trigger for any question about StringInputCubit, IntValueCubit, SingleValueCubit, single value cubit."
 ---
 
 # Single Value Cubit
@@ -16,8 +16,10 @@ Assume the cubit is usually obtained through the app's existing dependency injec
 - `SingleValueCubit<T>`: a `Cubit<T>` with a `set(T value)` method.
 - `SingleValueBoolCubitExtension.toggle()`: flips a `SingleValueCubit<bool>`.
 - `SingleValueStringCubitExtension.erase()`: clears a `SingleValueCubit<String>` to an empty string.
+- `SingleValueIntCubitExtension.increment()` / `.decrement()`: steps a `SingleValueCubit<int>` up or down by 1.
 - `BlocExtensions.observe()`: emits the current `state` immediately, then future stream updates.
 - `StringInputCubit`: a `SingleValueCubit<String>` initialized with `''`.
+- `IntValueCubit`: a `SingleValueCubit<int>` initialized with `0`.
 - `TextCubitBinder`: two-way binding between a `SingleValueCubit<String>` and a `TextEditingController`.
 
 ## Workflow
@@ -37,8 +39,9 @@ Follow this sequence when helping with `single_value_cubit` tasks.
 
 Use these defaults:
 
-- For booleans, numbers, enums, offsets, IDs, filters, selected tabs, and other one-value state: use `SingleValueCubit<T>`.
+- For booleans, enums, offsets, IDs, filters, selected tabs, and other one-value state: use `SingleValueCubit<T>`.
 - For text input with an empty default: use `StringInputCubit`.
+- For integer counters or quantities starting from 0: use `IntValueCubit`.
 - For a text field that must stay synchronized with cubit state in both directions: use `TextCubitBinder`.
 - For reacting to the current value plus future changes from a `BlocBase`: use `observe()`.
 
@@ -79,6 +82,22 @@ Show it in realistic usage, for example by calling `context.read<PasswordVisibil
 `SingleValueStringCubitExtension` is automatically available on any `SingleValueCubit<String>`. Prefer `erase()` when the user wants reset-to-empty behavior.
 
 Show it in realistic usage, for example by calling `context.read<SearchQueryCubit>().erase` from a clear/reset action. Like `toggle`, `erase` can be passed by reference as a callback.
+
+### Integer stepping — `SingleValueIntCubitExtension`
+
+`SingleValueIntCubitExtension` is automatically available on any `SingleValueCubit<int>`. Prefer the built-in `increment()` and `decrement()` over hand-writing step methods.
+
+Show them in realistic usage, for example wiring stepper buttons (`+` / `-`) to `context.read<QuantityCubit>().increment` and `context.read<QuantityCubit>().decrement`. Both can be passed by reference directly as `onPressed` callbacks.
+
+### `IntValueCubit` — integer counter with zero default
+
+`IntValueCubit` is a convenience subclass of `SingleValueCubit<int>` that starts with `0`. Use it directly or subclass it when the initial value is always zero:
+
+```dart
+class CartItemCountCubit extends IntValueCubit {}
+```
+
+For counters with a non-zero starting value, subclass `SingleValueCubit<int>` directly.
 
 ### `StringInputCubit` — text input with empty default
 

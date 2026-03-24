@@ -33,6 +33,25 @@ extension SingleValueStringCubitExtension on SingleValueCubit<String> {
   }
 }
 
+/// let you quickly change int single value cubits
+extension SingleValueIntCubitExtension on SingleValueCubit<int> {
+  /// increments the current state by 1
+  void increment() {
+    set(state + 1);
+  }
+
+  /// decrements the current state by 1
+  void decrement() {
+    set(state - 1);
+  }
+}
+
+/// Single value cubit designed to work with integer counters and quantities
+class IntValueCubit extends SingleValueCubit<int> {
+  /// Creates an IntValueCubit with an initial value of 0.
+  IntValueCubit() : super(0);
+}
+
 /// Bloc extensions
 extension BlocExtensions<T> on BlocBase<T> {
   /// let you observe the state of a bloc or cubit

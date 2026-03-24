@@ -63,6 +63,37 @@ class SearchQueryCubit extends SingleValueCubit<String> {
 onPressed: context.read<SearchQueryCubit>().erase,
 ```
 
+## Int Extension
+
+`SingleValueIntCubitExtension` adds `increment()` and `decrement()` methods to any `SingleValueCubit<int>`, stepping the value up or down by 1:
+
+```dart
+class QuantityCubit extends SingleValueCubit<int> {
+  QuantityCubit() : super(1);
+}
+
+// inside a widget
+IconButton(
+  onPressed: context.read<QuantityCubit>().decrement,
+  icon: const Icon(Icons.remove),
+),
+BlocBuilder<QuantityCubit, int>(
+  builder: (context, quantity) => Text('$quantity'),
+),
+IconButton(
+  onPressed: context.read<QuantityCubit>().increment,
+  icon: const Icon(Icons.add),
+),
+```
+
+## IntValueCubit
+
+`IntValueCubit` is a convenience subclass of `SingleValueCubit<int>` initialized with `0`. Use it as a base class whenever the state is a counter or quantity starting from zero:
+
+```dart
+class CartItemCountCubit extends IntValueCubit {}
+```
+
 ## TextCubitBinder Example
 
 The `TextCubitBinder` widget provides two-way binding between a `SingleValueCubit<String>` and a `TextEditingController`:

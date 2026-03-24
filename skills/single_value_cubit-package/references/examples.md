@@ -141,6 +141,60 @@ IconButton(
 )
 ```
 
+## Integer stepper with IntValueCubit
+
+### Cubit file:
+```dart
+import 'package:injectable/injectable.dart';
+import 'package:single_value_cubit/single_value_cubit.dart';
+
+@injectable
+class QuantityCubit extends IntValueCubit {}
+```
+
+### Widget file:
+```dart
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import 'package:my_app/**/cubit/quantity_cubit.dart';
+
+class QuantityStepper extends StatelessWidget {
+  const QuantityStepper({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<QuantityCubit, int>(
+      builder: (context, quantity) {
+        return Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            IconButton(
+              onPressed: context.read<QuantityCubit>().decrement,
+              icon: const Icon(Icons.remove),
+            ),
+            Text('$quantity'),
+            IconButton(
+              onPressed: context.read<QuantityCubit>().increment,
+              icon: const Icon(Icons.add),
+            ),
+          ],
+        );
+      },
+    );
+  }
+}
+```
+
+For a counter starting at a non-zero value, subclass `SingleValueCubit<int>` directly:
+
+```dart
+@injectable
+class RatingCubit extends SingleValueCubit<int> {
+  RatingCubit() : super(3);
+}
+```
+
 ## Observe current state immediately
 
 Use this when an existing cubit needs `state` first and then later updates.
