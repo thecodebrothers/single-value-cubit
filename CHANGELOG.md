@@ -1,3 +1,6 @@
+## 1.2.2
+* Add skills for AI agents
+
 ## 1.2.1
 * Fix problem of infinite loop while setting textcontroller value from cubit state change
 
