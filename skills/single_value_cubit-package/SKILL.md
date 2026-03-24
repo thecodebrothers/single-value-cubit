@@ -1,6 +1,6 @@
 ---
 name: single_value_cubit-package
-description: "Use this skill when the user wants to use the single_value_cubit package, wire simple Flutter state with a Cubit, bind text fields to cubits, toggle boolean state, clear string state, or observe a Bloc/Cubit stream with the current value emitted immediately. Trigger this whenever the task involves lightweight single-value state such as inputs, flags, scroll positions, filters, or replacing ad hoc ValueNotifier or basic Cubit boilerplate with single_value_cubit."
+description: "Use this skill when the user wants to use the single_value_cubit package, wire simple Flutter state with a Cubit, bind text fields to cubits, toggle boolean state with toggle(), clear string state with erase(), use StringInputCubit for text inputs, observe a Bloc/Cubit stream with the current value emitted immediately via observe(), or use SingleValueBoolCubitExtension/SingleValueStringCubitExtension. Trigger this whenever the task involves lightweight single-value state such as inputs, flags, scroll positions, filters, or replacing ad hoc ValueNotifier or basic Cubit boilerplate with single_value_cubit. MUST trigger for any question about StringInputCubit, SingleValueCubit, single value cubit."
 ---
 
 # Single Value Cubit
@@ -68,17 +68,27 @@ class SelectedTabCubit extends SingleValueCubit<int> {
 }
 ```
 
-### Boolean toggles
+### Boolean toggles — `SingleValueBoolCubitExtension`
 
-Prefer the built-in extension instead of hand-writing a toggle method.
+`SingleValueBoolCubitExtension` is automatically available on any `SingleValueCubit<bool>`. Prefer the built-in `toggle()` extension instead of hand-writing a toggle method.
 
-Show it in realistic usage, for example by calling `context.read<PasswordVisibilityCubit>().toggle()` from a button handler.
+Show it in realistic usage, for example by calling `context.read<PasswordVisibilityCubit>().toggle` from a button `onPressed` handler. Point out that `toggle` can be passed by reference (no parentheses) directly as a callback.
 
-### String clearing
+### String clearing — `SingleValueStringCubitExtension`
 
-Prefer `erase()` when the user wants reset-to-empty behavior.
+`SingleValueStringCubitExtension` is automatically available on any `SingleValueCubit<String>`. Prefer `erase()` when the user wants reset-to-empty behavior.
 
-Show it in realistic usage, for example by calling `context.read<SearchQueryCubit>().erase()` from a clear action.
+Show it in realistic usage, for example by calling `context.read<SearchQueryCubit>().erase` from a clear/reset action. Like `toggle`, `erase` can be passed by reference as a callback.
+
+### `StringInputCubit` — text input with empty default
+
+`StringInputCubit` is a convenience subclass of `SingleValueCubit<String>` that starts with `''`. Use it directly or subclass it when the initial state is always an empty string:
+
+```dart
+class SearchQueryCubit extends StringInputCubit {}
+```
+
+Do not define a `StringInputCubit` subclass that only adds a constructor if the parent already supplies the empty-string default — the naked subclass is enough.
 
 ### Observe current state and future updates
 
