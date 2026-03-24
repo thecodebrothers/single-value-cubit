@@ -1,3 +1,6 @@
+## 1.2.3
+* Add generic text cubit binder
+
 ## 1.2.2
 * Add skills for AI agents
 

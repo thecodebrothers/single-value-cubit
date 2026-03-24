@@ -21,6 +21,7 @@ Assume the cubit is usually obtained through the app's existing dependency injec
 - `StringInputCubit`: a `SingleValueCubit<String>` initialized with `''`.
 - `IntValueCubit`: a `SingleValueCubit<int>` initialized with `0`.
 - `TextCubitBinder`: two-way binding between a `SingleValueCubit<String>` and a `TextEditingController`.
+- `GenericTextCubitBinder<T>`: two-way binding for arbitrary state types where only part of the state is a text field. Requires `getInputCallback` to extract the text and `updateValue` to merge edits back into the state.
 
 ## Workflow
 
@@ -42,7 +43,8 @@ Use these defaults:
 - For booleans, enums, offsets, IDs, filters, selected tabs, and other one-value state: use `SingleValueCubit<T>`.
 - For text input with an empty default: use `StringInputCubit`.
 - For integer counters or quantities starting from 0: use `IntValueCubit`.
-- For a text field that must stay synchronized with cubit state in both directions: use `TextCubitBinder`.
+- For a text field that must stay synchronized with cubit state in both directions when the full state is a `String`: use `TextCubitBinder`.
+- For a text field bound to a cubit whose state is a composite type (e.g., a model with a name field): use `GenericTextCubitBinder<T>` with `getInputCallback` and `updateValue`.
 - For reacting to the current value plus future changes from a `BlocBase`: use `observe()`.
 
 Avoid this package when:

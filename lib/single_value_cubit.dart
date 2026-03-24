@@ -124,3 +124,104 @@ class _TextCubitBinderState extends State<TextCubitBinder> {
     );
   }
 }
+
+/// A widget that binds a [SingleValueCubit<T>] to a [TextEditingController]
+/// for state types that contain a text component alongside other data.
+///
+/// Unlike [TextCubitBinder], which works only with `SingleValueCubit<String>`,
+/// this widget accepts arbitrary state types. Use [getInputCallback] to extract
+/// the text portion from the state and [updateValue] to merge edited text back
+/// into the state before emitting it.
+///
+/// If [cubit] is not provided, the nearest [SingleValueCubit<T>] ancestor from
+/// the widget tree is used via [BlocProvider].
+class GenericTextCubitBinder<T> extends StatefulWidget {
+  /// Creates a [GenericTextCubitBinder].
+  const GenericTextCubitBinder({
+    required this.builder,
+    required this.getInputCallback,
+    required this.updateValue,
+    super.key,
+    this.cubit,
+  });
+
+  /// Optional cubit to bind to. When omitted, the nearest
+  /// [SingleValueCubit<T>] in the widget tree is used.
+  final SingleValueCubit<T>? cubit;
+
+  /// Builder function that receives the [TextEditingController] bound to
+  /// the cubit's text component.
+  final Widget Function(BuildContext context, TextEditingController controller)
+      builder;
+
+  /// Extracts the text value from the current cubit state.
+  /// Called to initialise the controller and to detect state changes
+  /// that require a controller update.
+  final String Function(T value) getInputCallback;
+
+  /// Merges the edited [text] back into the current cubit [value], returning
+  /// the new state to emit. Called on every controller change.
+  final T Function(T value, String text) updateValue;
+
+  @override
+  State<GenericTextCubitBinder<T>> createState() =>
+      _GenericTextCubitBinderState<T>();
+}
+
+class _GenericTextCubitBinderState<T> extends State<GenericTextCubitBinder<T>> {
+  late TextEditingController _controller;
+
+  late final void Function() _listener;
+  late final SingleValueCubit<T> _cubit;
+
+  @override
+  void initState() {
+    super.initState();
+    _cubit = _getCubit();
+    _controller = TextEditingController();
+
+    final value = widget.getInputCallback(_cubit.state);
+    if (value != _controller.text) {
+      _controller.text = value;
+    }
+    _listener = () => _cubit.set(
+          widget.updateValue(_cubit.state, _controller.text),
+        );
+    _controller.addListener(_listener);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _controller.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocListener<SingleValueCubit<T>, T>(
+      listenWhen: (previous, current) {
+        final previousValue = widget.getInputCallback(previous);
+        final newValue = widget.getInputCallback(current);
+
+        return previousValue != newValue;
+      },
+      bloc: _cubit,
+      listener: (context, state) {
+        final value = widget.getInputCallback(state);
+        if (value != _controller.text) {
+          _controller
+            ..removeListener(_listener)
+            ..text = value
+            ..addListener(_listener);
+        }
+      },
+      child: Builder(
+        builder: (context) => widget.builder(context, _controller),
+      ),
+    );
+  }
+
+  SingleValueCubit<T> _getCubit() {
+    return widget.cubit ?? BlocProvider.of<SingleValueCubit<T>>(context);
+  }
+}
